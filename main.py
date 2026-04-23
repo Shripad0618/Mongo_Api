@@ -37,9 +37,9 @@ async def get_euron_data():
     return euron_data_list
 
 
-@app.get("/euron/showdata/{id}")
-async def get_euron_data_by_id(id: str):
-    data = await euron_data.find_one({"_id": ObjectId(id)})
+@app.get("/euron/showdata/{name}")
+async def get_euron_data_by_name(name: str):
+    data = await euron_data.find_one({"name": name})
     if data:
         data["_id"] = str(data["_id"])
         return data
