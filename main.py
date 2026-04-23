@@ -20,6 +20,9 @@ class EuronData(BaseModel):
     phone: int
     course: str
 
+
+
+
 @app.post("/euron/insert")
 async def euron_data_insert_helper(data:EuronData):
     result = await euron_data.insert_one(data.dict())
@@ -32,3 +35,6 @@ async def get_euron_data():
         data["_id"] = str(data["_id"])
         euron_data_list.append(data)
     return euron_data_list
+
+#@app.get("/euron/getdata/{id}")
+#async def get_euron_data_by_id(id: str):
