@@ -36,5 +36,15 @@ async def get_euron_data():
         euron_data_list.append(data)
     return euron_data_list
 
+
+@app.get("/euron/getdata/{id}")
+async def get_euron_data_by_id(id: str):
+    data = await euron_data.find_one({"_id": ObjectId(id)})
+    if data:
+        data["_id"] = str(data["_id"])
+        return data
+    else:
+        raise HTTPException(status_code=404, detail="Data not found")
+
 #@app.get("/euron/getdata/{id}")
 #async def get_euron_data_by_id(id: str):
