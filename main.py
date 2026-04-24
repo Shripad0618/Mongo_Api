@@ -46,5 +46,13 @@ async def get_euron_data_by_name(name: str):
     else:
         raise HTTPException(status_code=404, detail="Data not found")
 
+@app.put("/euron/updatedata/{name}")
+async def update_data_by_name(name: str, updated_data: EuronData):
+    result = await euron_data.update_one({"name": name}, {"$set": updated_data.dict()})
+    if result.matched_count == 1:
+        return {"message": "Data updated successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="Data not found")
+
 #@app.get("/euron/getdata/{id}")
 #async def get_euron_data_by_id(id: str):
