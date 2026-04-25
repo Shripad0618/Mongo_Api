@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from motor.motor_asyncio import AsyncIOMotorClient
 from typing import Optional
@@ -52,7 +52,7 @@ async def get_euron_data_by_name(name: str):
         raise HTTPException(status_code=404, detail="Data not found")
 
 @app.put("/euron/updatedata/{name}")
-async def update_data_by_name(name: str, updated_data: EuronDataUpdate = Body(...)):
+async def update_data_by_name(name: str, updated_data: EuronDataUpdate ):
     fields = updated_data.model_dump(exclude_none=True)
     if not fields:
         raise HTTPException(status_code=400, detail="No fields to update")
