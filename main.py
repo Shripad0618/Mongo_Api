@@ -1,3 +1,5 @@
+from pyparsing import Optional
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -20,6 +22,11 @@ class EuronData(BaseModel):
     phone: int
     course: str
 
+class EuronDataUpdate(BaseModel):
+    name: Optional[str] = None
+    city: Optional[str] = None
+    phone: Optional[int] = None
+    course: Optional[str] = None
 
 
 
@@ -47,9 +54,12 @@ async def get_euron_data_by_name(name: str):
         raise HTTPException(status_code=404, detail="Data not found")
 
 @app.put("/euron/updatedata/{name}")
-async def update_data_by_name(name: str, updated_data: EuronData):
-    result = await euron_data.update_one({"name": name}, {"$set": updated_data.dict()})
-    if result.matched_count == 1:
+async def update_data_by_name(name: str, updated_data: EuronDataUpdate):
+    fields = updated_data.model_dump(exclude_none=True)
+    if not fields:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    result = await euron_data.update_one({"name": name}, {"$set": fields})
+    if result.modified_count == 1:
         return {"message": "Data updated successfully"}
     else:
         raise HTTPException(status_code=404, detail="Data not found")
