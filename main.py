@@ -62,5 +62,13 @@ async def update_data_by_name(name: str, updated_data: EuronDataUpdate ):
     else:
         raise HTTPException(status_code=404, detail="Data not found")
 
+@app.delete("/euron/deletedata/{name}")
+async def delete_data_by_name(name: str):
+    result = await euron_data.delete_one({"name": name})
+    if result.deleted_count == 1:
+        return {"message": "Data deleted successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="Data not found")
+
 #@app.get("/euron/getdata/{id}")
 #async def get_euron_data_by_id(id: str):
